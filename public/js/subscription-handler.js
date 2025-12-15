@@ -13,23 +13,30 @@
 			// Clear any previous messages
 			messageContainer.empty();
 			
+			var i18n = ( window.feathershareSubscribe && window.feathershareSubscribe.i18n ) ? window.feathershareSubscribe.i18n : {};
+			var strings = {
+				invalidEmail: i18n.invalidEmail || 'Please enter a valid email address.',
+				processing: i18n.processing || 'Processing...',
+				genericError: i18n.genericError || 'An error occurred. Please try again.'
+			};
+
 			// Validate email
 			if (!emailField.val() || !isValidEmail(emailField.val())) {
-				messageContainer.html('<div class="feathershare-error">Please enter a valid email address.</div>');
+				messageContainer.html('<div class="feathershare-error">' + strings.invalidEmail + '</div>');
 				return;
 			}
 			
 			// Disable submit button during processing
 			var submitButton = form.find('input[type="submit"]');
 			var originalText = submitButton.val();
-			submitButton.val('Processing...').prop('disabled', true);
+			submitButton.val(strings.processing).prop('disabled', true);
 			
 			// Send AJAX request
 			$.ajax({
-				url: feathershare_ajax.ajax_url,
+				url: window.feathershareSubscribe ? window.feathershareSubscribe.ajaxUrl : '',
 				type: 'POST',
 				data: {
-					action: 'feathershare_subscribe',
+					action: window.feathershareSubscribe ? window.feathershareSubscribe.action : 'feathershare_subscribe',
 					feathershare_subscribe_submit: '1',
 					feathershare_subscribe_nonce: nonceField.val(),
 					feathershare_email: emailField.val()
@@ -45,7 +52,7 @@
 					}
 				},
 				error: function() {
-					messageContainer.html('<div class="feathershare-error">An error occurred. Please try again.</div>');
+					messageContainer.html('<div class="feathershare-error">' + strings.genericError + '</div>');
 				},
 				complete: function() {
 					// Re-enable submit button

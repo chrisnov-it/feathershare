@@ -1,5 +1,10 @@
 <?php
 
+// If this file is called directly, abort.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * The public-facing functionality of the plugin.
  *
@@ -68,10 +73,5 @@ class FeatherShare_Public {
 	 */
 	public function enqueue_scripts() {
 		wp_enqueue_script( $this->plugin_name, FEATHERSHARE_URL . 'public/js/feathershare-public.js', array( 'jquery' ), $this->version, true );
-		
-		// Localize the script with AJAX URL
-		wp_localize_script( $this->plugin_name, 'feathershare_ajax', array(
-			'ajax_url' => admin_url( 'admin-ajax.php' )
-		));
 	}
 }

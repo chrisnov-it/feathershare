@@ -1,5 +1,10 @@
 <?php
 
+// If this file is called directly, abort.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * The social sharing functionality of the plugin.
  *
@@ -102,12 +107,12 @@ class Social_Sharing {
 	 * @return   string    The HTML for the social sharing buttons.
 	 */
 	private function generate_sharing_buttons() {
-		$post_url = get_permalink();
+		$post_url   = get_permalink();
 		$post_title = get_the_title();
 		
-		if (empty($post_url) || empty($post_title)) {
+		if ( empty( $post_url ) || empty( $post_title ) ) {
 			$post_url = get_home_url();
-			$post_title = get_bloginfo('name');
+			$post_title = get_bloginfo( 'name' );
 		}
 
 		// Get button style settings
@@ -124,36 +129,36 @@ class Social_Sharing {
 			$container_classes .= ' feathershare-with-labels';
 		}
 
-		$sharing_buttons = '<div class="' . esc_attr( $container_classes ) . '" data-url="' . esc_attr( $post_url ) . '">';
+		$sharing_buttons = '<div class="' . esc_attr( $container_classes ) . '" data-url="' . esc_url( $post_url ) . '">';
 
-		$encoded_url = urlencode($post_url);
-		$encoded_title = urlencode($post_title);
+		$encoded_url   = rawurlencode( $post_url );
+		$encoded_title = rawurlencode( $post_title );
 
 		// Master list of all available social networks
 		$all_networks = array(
-			'facebook'  => array( 'url' => 'https://www.facebook.com/sharer/sharer.php?u=' . $encoded_url, 'label' => 'Facebook' ),
-			'twitter'   => array( 'url' => 'https://twitter.com/intent/tweet?url=' . $encoded_url . '&text=' . $encoded_title, 'label' => 'X (Twitter)' ),
-			'linkedin'  => array( 'url' => 'https://www.linkedin.com/shareArticle?mini=true&url=' . $encoded_url . '&title=' . $encoded_title, 'label' => 'LinkedIn' ),
-			'threads'   => array( 'url' => 'https://www.threads.net/intent/post?text=' . $encoded_title . '%20' . $encoded_url, 'label' => 'Threads' ),
-			'whatsapp'  => array( 'url' => 'https://wa.me/?text=' . $encoded_title . '%20' . $encoded_url, 'label' => 'WhatsApp' ),
-			'telegram'  => array( 'url' => 'https://t.me/share/url?url=' . $encoded_url . '&text=' . $encoded_title, 'label' => 'Telegram' ),
-			'reddit'    => array( 'url' => 'https://reddit.com/submit?url=' . $encoded_url . '&title=' . $encoded_title, 'label' => 'Reddit' ),
-			'pinterest' => array( 'url' => 'https://pinterest.com/pin/create/button/?url=' . $encoded_url . '&description=' . $encoded_title, 'label' => 'Pinterest' ),
-			'vk'        => array( 'url' => 'https://vk.com/share.php?url=' . $encoded_url, 'label' => 'VK' ),
-			'xing'      => array( 'url' => 'https://www.xing.com/spi/shares/new?url=' . $encoded_url, 'label' => 'XING' ),
-			'email'     => array( 'url' => 'mailto:?subject=' . rawurlencode($post_title) . '&body=' . rawurlencode($post_url), 'label' => 'Email' ),
+			'facebook'  => array( 'url' => 'https://www.facebook.com/sharer/sharer.php?u=' . $encoded_url, 'label' => __( 'Facebook', 'feathershare' ) ),
+			'twitter'   => array( 'url' => 'https://twitter.com/intent/tweet?url=' . $encoded_url . '&text=' . $encoded_title, 'label' => __( 'X (Twitter)', 'feathershare' ) ),
+			'linkedin'  => array( 'url' => 'https://www.linkedin.com/shareArticle?mini=true&url=' . $encoded_url . '&title=' . $encoded_title, 'label' => __( 'LinkedIn', 'feathershare' ) ),
+			'threads'   => array( 'url' => 'https://www.threads.net/intent/post?text=' . $encoded_title . '%20' . $encoded_url, 'label' => __( 'Threads', 'feathershare' ) ),
+			'whatsapp'  => array( 'url' => 'https://wa.me/?text=' . $encoded_title . '%20' . $encoded_url, 'label' => __( 'WhatsApp', 'feathershare' ) ),
+			'telegram'  => array( 'url' => 'https://t.me/share/url?url=' . $encoded_url . '&text=' . $encoded_title, 'label' => __( 'Telegram', 'feathershare' ) ),
+			'reddit'    => array( 'url' => 'https://reddit.com/submit?url=' . $encoded_url . '&title=' . $encoded_title, 'label' => __( 'Reddit', 'feathershare' ) ),
+			'pinterest' => array( 'url' => 'https://pinterest.com/pin/create/button/?url=' . $encoded_url . '&description=' . $encoded_title, 'label' => __( 'Pinterest', 'feathershare' ) ),
+			'vk'        => array( 'url' => 'https://vk.com/share.php?url=' . $encoded_url, 'label' => __( 'VK', 'feathershare' ) ),
+			'xing'      => array( 'url' => 'https://www.xing.com/spi/shares/new?url=' . $encoded_url, 'label' => __( 'XING', 'feathershare' ) ),
+			'email'     => array( 'url' => 'mailto:?subject=' . rawurlencode( $post_title ) . '&body=' . rawurlencode( $post_url ), 'label' => __( 'Email', 'feathershare' ) ),
 		);
 
 		// Get the enabled networks from settings
-		$enabled_networks = get_option('feathershare_social_networks', array('facebook' => 1, 'twitter' => 1, 'linkedin' => 1)); // Default
+		$enabled_networks = get_option( 'feathershare_social_networks', array( 'facebook' => 1, 'twitter' => 1, 'linkedin' => 1 ) );
 
-		foreach ($all_networks as $network => $data) {
+		foreach ( $all_networks as $network => $data ) {
 			// Check if the network is enabled in the settings
-			if ( ! empty( $enabled_networks[$network] ) ) {
+			if ( ! empty( $enabled_networks[ $network ] ) ) {
 				/* translators: %s: Social network name */
 				$aria_label = sprintf( __( 'Share on %s', 'feathershare' ), $data['label'] );
 				$sharing_buttons .= '<a href="' . esc_url( $data['url'] ) . '" target="_blank" rel="noopener noreferrer" class="feathershare-' . esc_attr( $network ) . '" aria-label="' . esc_attr( $aria_label ) . '">';
-				$sharing_buttons .= $this->get_feathershare_svg_icon($network);
+				$sharing_buttons .= $this->get_feathershare_svg_icon( $network );
 				$sharing_buttons .= '<span class="screen-reader-text">' . esc_html( $data['label'] ) . '</span>';
 				// Add label text if enabled
 				if ( $show_labels ) {
@@ -167,10 +172,17 @@ class Social_Sharing {
 		$facebook_app_id = get_option( 'feathershare_facebook_app_id', '' );
 		
 		if ( $enable_messenger && ! empty( $facebook_app_id ) ) {
-			$messenger_url = 'https://www.facebook.com/dialog/send?link=' . $encoded_url . '&app_id=' . esc_attr( $facebook_app_id ) . '&redirect_uri=' . $encoded_url;
+			$messenger_url = add_query_arg(
+				array(
+					'link'         => $post_url,
+					'app_id'       => $facebook_app_id,
+					'redirect_uri' => $post_url,
+				),
+				'https://www.facebook.com/dialog/send'
+			);
 			$aria_label_messenger = __( 'Share on Messenger', 'feathershare' );
 			$sharing_buttons .= '<a href="' . esc_url( $messenger_url ) . '" target="_blank" rel="noopener noreferrer" class="feathershare-messenger" aria-label="' . esc_attr( $aria_label_messenger ) . '">';
-			$sharing_buttons .= $this->get_feathershare_svg_icon('messenger');
+			$sharing_buttons .= $this->get_feathershare_svg_icon( 'messenger' );
 			$sharing_buttons .= '<span class="screen-reader-text">' . esc_html__( 'Messenger', 'feathershare' ) . '</span>';
 			// Add label text if enabled
 			if ( $show_labels ) {
@@ -184,8 +196,8 @@ class Social_Sharing {
 			$copy_label = __( 'Copy Link', 'feathershare' );
 			$copied_label = __( 'Copied!', 'feathershare' );
 			$sharing_buttons .= '<button type="button" class="feathershare-copy-link" aria-label="' . esc_attr( $copy_label ) . '" data-copied-text="' . esc_attr( $copied_label ) . '">';
-			$sharing_buttons .= '<span class="feathershare-copy-icon">' . $this->get_feathershare_svg_icon('copylink') . '</span>';
-			$sharing_buttons .= '<span class="feathershare-check-icon">' . $this->get_feathershare_svg_icon('check') . '</span>';
+			$sharing_buttons .= '<span class="feathershare-copy-icon">' . $this->get_feathershare_svg_icon( 'copylink' ) . '</span>';
+			$sharing_buttons .= '<span class="feathershare-check-icon">' . $this->get_feathershare_svg_icon( 'check' ) . '</span>';
 			$sharing_buttons .= '<span class="screen-reader-text">' . esc_html( $copy_label ) . '</span>';
 			if ( $show_labels ) {
 				$sharing_buttons .= '<span class="feathershare-label feathershare-copy-label">' . esc_html( $copy_label ) . '</span>';

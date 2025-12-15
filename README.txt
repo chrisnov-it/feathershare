@@ -3,7 +3,7 @@ Contributors: reynovchristian
 Tags: social sharing, subscription form, facebook, twitter, linkedin, whatsapp, telegram, messenger, email, reddit, threads
 Requires at least: 5.0
 Tested up to: 6.5
-Stable tag: 1.1.0
+Stable tag: 1.2
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -65,6 +65,13 @@ Go to Settings > FeatherShare and find the "Button Appearance" section. You can 
 
 == Changelog ==
 
+= 1.2 =
+* Refactored folder structure to remove redundant folders and consolidate assets
+* Added SVG icons for Facebook, Twitter/X, LinkedIn, Instagram, Threads, and WhatsApp
+* Updated CSS to include styles for SVG icons
+* Ensured all SVG icons include the `class="feathershare-icon"` attribute for automatic styling
+* Improved plugin performance and maintainability
+
 = 1.1.0 =
 * Added Copy Link button with clipboard functionality and visual feedback
 * Added Button Style Control: shape (circle, square, rounded), size (small, medium, large)
@@ -82,6 +89,9 @@ Go to Settings > FeatherShare and find the "Button Appearance" section. You can 
 * Admin settings for Messenger integration
 
 == Upgrade Notice ==
+
+= 1.2 =
+Refactored folder structure, added SVG icons for social media platforms, and improved plugin performance.
 
 = 1.1.0 =
 New features: Copy Link button, customizable button styles, and improved WordPress 6.2+ compatibility.

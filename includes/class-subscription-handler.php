@@ -1,5 +1,10 @@
 <?php
 
+// If this file is called directly, abort.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * The subscription functionality of the plugin.
  *
@@ -68,18 +73,35 @@ class Subscription_Handler {
 	 */
 	public function create_subscription_post_type() {
 		$args = array(
-			'public' => false,
-			'publicly_queryable' => false,
-			'show_ui' => true,
-			'show_in_menu' => true,
-			'query_var' => true,
-			'rewrite' => array( 'slug' => 'subscription' ),
-			'capability_type' => 'post',
-			'has_archive' => false,
-			'hierarchical' => false,
-			'menu_position' => null,
-			'supports' => array( 'title' ),
-			'menu_icon' => 'dashicons-email',
+			'public'              => false,
+			'publicly_queryable'  => false,
+			'show_ui'             => true,
+			'show_in_menu'        => true,
+			'query_var'           => true,
+			'rewrite'             => array( 'slug' => 'subscription' ),
+			'has_archive'         => false,
+			'hierarchical'        => false,
+			'menu_position'       => null,
+			'supports'            => array( 'title' ),
+			'menu_icon'           => 'dashicons-email',
+			'map_meta_cap'        => true,
+			'capability_type'     => 'feathershare_subscription',
+			'capabilities'        => array(
+				'edit_post'              => 'manage_options',
+				'read_post'              => 'manage_options',
+				'delete_post'            => 'manage_options',
+				'edit_posts'             => 'manage_options',
+				'edit_others_posts'      => 'manage_options',
+				'delete_posts'           => 'manage_options',
+				'publish_posts'          => 'manage_options',
+				'read_private_posts'     => 'manage_options',
+				'delete_private_posts'   => 'manage_options',
+				'delete_published_posts' => 'manage_options',
+				'delete_others_posts'    => 'manage_options',
+				'edit_private_posts'     => 'manage_options',
+				'edit_published_posts'   => 'manage_options',
+				'create_posts'           => 'manage_options',
+			),
 		);
 
 		register_post_type( 'feathershare_subscription', $args );
@@ -94,23 +116,20 @@ class Subscription_Handler {
 	 */
 	public function display_subscription_form( $atts ) {
 		// Get custom text from options, with defaults
-		$title = get_option('feathershare_subscription_title', __( 'Subscribe to our Newsletter', 'feathershare' ));
-		$description = get_option('feathershare_subscription_description', __( 'Get the latest posts delivered right to your inbox.', 'feathershare' ));
-		$button_text = get_option('feathershare_subscription_button_text', __( 'Subscribe', 'feathershare' ));
-
-		// Generate nonce for security
-		$nonce = wp_create_nonce( 'feathershare_subscribe_nonce' );
+		$title       = get_option( 'feathershare_subscription_title', __( 'Subscribe to our Newsletter', 'feathershare' ) );
+		$description = get_option( 'feathershare_subscription_description', __( 'Get the latest posts delivered right to your inbox.', 'feathershare' ) );
+		$button_text = get_option( 'feathershare_subscription_button_text', __( 'Subscribe', 'feathershare' ) );
 
 		// Build the form HTML
 		$form = '<div class="feathershare-subscription-form">';
-		$form .= '<h3>' . esc_html($title) . '</h3>';
-		$form .= '<p>' . wp_kses_post($description) . '</p>';
+		$form .= '<h3>' . esc_html( $title ) . '</h3>';
+		$form .= '<p>' . wp_kses_post( $description ) . '</p>';
 		$form .= '<div class="feathershare-subscription-message"></div>';
 		$form .= '<form id="feathershare-subscription-form" method="post">';
-		$form .= '<input type="hidden" name="feathershare_subscribe_nonce" value="' . $nonce . '" />';
-		$form .= '<p><label for="feathershare_email" class="screen-reader-text">' . __( 'Email Address:', 'feathershare' ) . '</label>';
-		$form .= '<input type="email" id="feathershare_email" name="feathershare_email" placeholder="' . __('Enter your email', 'feathershare') . '" required /></p>';
-		$form .= '<p><input type="submit" name="feathershare_subscribe_submit" value="' . esc_attr($button_text) . '" /></p>';
+		$form .= wp_nonce_field( 'feathershare_subscribe', 'feathershare_subscribe_nonce', true, false );
+		$form .= '<p><label for="feathershare_email" class="screen-reader-text">' . esc_html__( 'Email Address:', 'feathershare' ) . '</label>';
+		$form .= '<input type="email" id="feathershare_email" name="feathershare_email" placeholder="' . esc_attr__( 'Enter your email', 'feathershare' ) . '" required /></p>';
+		$form .= '<p><input type="submit" name="feathershare_subscribe_submit" value="' . esc_attr( $button_text ) . '" /></p>';
 		$form .= '</form>';
 		$form .= '</div>';
 
@@ -125,7 +144,7 @@ class Subscription_Handler {
 	 * @return   string    The content with the form appended, if applicable.
 	 */
 	public function maybe_display_form_after_content( $content ) {
-		$placement = get_option('feathershare_subscription_placement', 'manual');
+		$placement = get_option( 'feathershare_subscription_placement', 'manual' );
 
 		if ( $placement === 'after_content' && is_single() && in_the_loop() && is_main_query() ) {
 			$content .= $this->display_subscription_form( array() );
@@ -140,37 +159,50 @@ class Subscription_Handler {
 	 * @since    1.0.0
 	 */
 	public function process_subscription_form() {
-		// Verify nonce for security
-		if ( ! isset( $_POST['feathershare_subscribe_nonce'] ) || 
-			 ! wp_verify_nonce( $_POST['feathershare_subscribe_nonce'], 'feathershare_subscribe_nonce' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Security check failed', 'feathershare' ) ) );
+		// Only accept POST requests.
+		if ( 'POST' !== $_SERVER['REQUEST_METHOD'] ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid request method.', 'feathershare' ) ), 405 );
+		}
+
+		// Verify nonce for security.
+		if ( ! check_ajax_referer( 'feathershare_subscribe', 'feathershare_subscribe_nonce', false ) ) {
+			wp_send_json_error( array( 'message' => __( 'Security check failed.', 'feathershare' ) ), 403 );
 		}
 
 		// Validate email
 		if ( ! isset( $_POST['feathershare_email'] ) || empty( $_POST['feathershare_email'] ) ) {
-			wp_send_json_error( array( 'message' => __( 'Please enter a valid email address', 'feathershare' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Please enter a valid email address.', 'feathershare' ) ), 400 );
 		}
 
-		$email = sanitize_email( $_POST['feathershare_email'] );
+		$email = sanitize_email( wp_unslash( $_POST['feathershare_email'] ) );
+		$email = strtolower( $email );
 		
 		if ( ! is_email( $email ) ) {
-			wp_send_json_error( array( 'message' => __( 'Please enter a valid email address', 'feathershare' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Please enter a valid email address.', 'feathershare' ) ), 400 );
 		}
 
-		// Check if email already exists (using WP_Query instead of deprecated get_page_by_title)
-		$existing_query = new WP_Query( array(
-			'post_type'      => 'feathershare_subscription',
-			'post_status'    => 'publish',
-			'title'          => $email,
-			'posts_per_page' => 1,
-			'fields'         => 'ids',
-		) );
-		
-		if ( $existing_query->have_posts() ) {
-			wp_reset_postdata();
+		// Check if email already exists.
+		$existing_ids = get_posts(
+			array(
+				'post_type'      => 'feathershare_subscription',
+				'post_status'    => 'publish',
+				'posts_per_page' => 1,
+				'fields'         => 'ids',
+				'no_found_rows'  => true,
+				'meta_query'     => array(
+					array(
+						'key'     => 'feathershare_email',
+						'value'   => $email,
+						'compare' => '=',
+					),
+				),
+			)
+		);
+
+		// Return the same message to avoid email enumeration.
+		if ( ! empty( $existing_ids ) ) {
 			wp_send_json_success( array( 'message' => __( 'Thank you for subscribing!', 'feathershare' ) ) );
 		}
-		wp_reset_postdata();
 
 		// Create post to store subscription
 		$post_data = array(
@@ -180,19 +212,17 @@ class Subscription_Handler {
 			'post_type'    => 'feathershare_subscription',
 		);
 
-		$post_id = wp_insert_post( $post_data );
+		$post_id = wp_insert_post( $post_data, true );
 
-		if ( $post_id && ! is_wp_error( $post_id ) ) {
-			wp_send_json_success( array( 'message' => __( 'Thank you for subscribing!', 'feathershare' ) ) );
-		} else {
-			// Log the error for debugging
-			if ( is_wp_error( $post_id ) ) {
+		if ( is_wp_error( $post_id ) ) {
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 				error_log( 'FeatherShare Subscription Error: ' . $post_id->get_error_message() );
-			} else {
-				error_log( 'FeatherShare Subscription Error: Unknown error occurred during post creation' );
 			}
-			wp_send_json_error( array( 'message' => __( 'An error occurred. Please try again.', 'feathershare' ) ) );
+			wp_send_json_error( array( 'message' => __( 'An error occurred. Please try again.', 'feathershare' ) ), 500 );
 		}
+
+		update_post_meta( $post_id, 'feathershare_email', $email );
+		wp_send_json_success( array( 'message' => __( 'Thank you for subscribing!', 'feathershare' ) ) );
 	}
 
 	/**
@@ -225,12 +255,20 @@ class Subscription_Handler {
 				$this->version, 
 				true 
 			);
-			
-			// Localize the script with AJAX URL
-			wp_localize_script( 
-				$this->plugin_name . '-subscription', 
-				'feathershare_ajax', 
-				array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) 
+
+			// Localize the script with AJAX settings + i18n strings.
+			wp_localize_script(
+				$this->plugin_name . '-subscription',
+				'feathershareSubscribe',
+				array(
+					'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+					'action'  => 'feathershare_subscribe',
+					'i18n'    => array(
+						'invalidEmail' => __( 'Please enter a valid email address.', 'feathershare' ),
+						'processing'   => __( 'Processing...', 'feathershare' ),
+						'genericError' => __( 'An error occurred. Please try again.', 'feathershare' ),
+					),
+				)
 			);
 		}
 	}
@@ -243,13 +281,26 @@ class Subscription_Handler {
 	 */
 	public function get_subscribers() {
 		global $wpdb;
-		
-		$subscribers = $wpdb->get_col( $wpdb->prepare(
-			"SELECT post_title FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s",
-			'feathershare_subscription',
-			'publish'
-		) );
-		
-		return $subscribers;
+
+		$subscribers = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT pm.meta_value FROM {$wpdb->posts} p INNER JOIN {$wpdb->postmeta} pm ON pm.post_id = p.ID WHERE p.post_type = %s AND p.post_status = %s AND pm.meta_key = %s ORDER BY p.ID DESC",
+				'feathershare_subscription',
+				'publish',
+				'feathershare_email'
+			)
+		);
+
+		if ( empty( $subscribers ) ) {
+			$subscribers = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT post_title FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s ORDER BY ID DESC",
+					'feathershare_subscription',
+					'publish'
+				)
+			);
+		}
+
+		return array_filter( array_map( 'sanitize_email', (array) $subscribers ) );
 	}
 }

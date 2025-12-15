@@ -1,5 +1,10 @@
 <?php
 
+// If this file is called directly, abort.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Provide a admin area view for the plugin
  *
@@ -14,14 +19,14 @@
 ?>
 
 <div class="wrap">
-    <h2>FeatherShare Settings</h2>
-    <?php settings_errors(); ?>
+	<h1><?php esc_html_e( 'FeatherShare Settings', 'feathershare' ); ?></h1>
+	<?php settings_errors(); ?>
 
-    <form method="post" action="options.php">
-        <?php
-        settings_fields( 'feathershare' );
-        do_settings_sections( 'feathershare' );
-        submit_button();
-        ?>
-    </form>
+	<form method="post" action="options.php">
+		<?php
+		settings_fields( 'feathershare' );
+		do_settings_sections( 'feathershare' );
+		submit_button();
+		?>
+	</form>
 </div>
