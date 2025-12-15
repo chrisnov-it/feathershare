@@ -80,6 +80,21 @@ class Social_Sharing {
 	 * @return   string    The SVG markup.
 	 */
 	private function get_feathershare_svg_icon( $icon_name ) {
+		// Define the path to the SVG icons
+		$icon_path = FEATHERSHARE_DIR . 'public/icons/' . esc_attr( $icon_name ) . '.svg';
+		
+		// Check if the SVG file exists
+		if ( file_exists( $icon_path ) ) {
+			// Load the SVG file content
+			$svg_content = file_get_contents( $icon_path );
+			
+			// Add role="img" attribute for accessibility
+			$svg_content = str_replace( '<svg', '<svg role="img"', $svg_content );
+			
+			return $svg_content;
+		}
+		
+		// Fallback to inline SVG if the file does not exist
 		$icons = array(
 			'twitter'  => '<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg>',
 			'facebook' => '<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.675 0H1.325C.593 0 0 .593 0 1.325v21.351C0 23.407.593 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.732 0 1.325-.593 1.325-1.325V1.325C24 .593 23.407 0 22.675 0Z"/></svg>',
