@@ -1,0 +1,95 @@
+# Copyright (C) 2025 Reynov Christian
+# This file is distributed under the same license as the FeatherShare plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: FeatherShare 1.0.0\n"
+"Report-Msgid-Bugs-To: https://chrisnov.com/\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-10-18T18:15:00+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.5.0\n"
+"X-Domain: feathershare\n"
+
+#. Plugin Name of the plugin
+msgid "FeatherShare"
+msgstr ""
+
+#. Description of the plugin
+msgid "A clean, modular, and object-oriented plugin following WordPress coding standards."
+msgstr ""
+
+#. Author of the plugin
+msgid "Reynov Christian"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://chrisnov.com/"
+msgstr ""
+
+#: includes/class-social-sharing.php:80
+msgid "Twitter"
+msgstr ""
+
+#: includes/class-social-sharing.php:81
+msgid "Facebook"
+msgstr ""
+
+#: includes/class-social-sharing.php:82
+msgid "LinkedIn"
+msgstr ""
+
+#: includes/class-social-sharing.php:83
+msgid "Threads"
+msgstr ""
+
+#: includes/class-social-sharing.php:84
+msgid "WhatsApp"
+msgstr ""
+
+#: includes/class-social-sharing.php:85
+msgid "Telegram"
+msgstr ""
+
+#: includes/class-social-sharing.php:95
+msgid "Messenger"
+msgstr ""
+
+#: includes/class-social-sharing.php:99
+msgid "Email"
+msgstr ""
+
+#: includes/class-social-sharing.php:100
+msgid "Reddit"
+msgstr ""
+
+#: includes/class-subscription-handler.php:121
+#: includes/class-subscription-handler.php:127
+#: includes/class-subscription-handler.php:132
+msgid "Please enter a valid email address"
+msgstr ""
+
+#: includes/class-subscription-handler.php:124
+msgid "Security check failed"
+msgstr ""
+
+#: includes/class-subscription-handler.php:141
+#: includes/class-subscription-handler.php:150
+#: includes/class-subscription-handler.php:156
+msgid "Thank you for subscribing!"
+msgstr ""
+
+#: includes/class-subscription-handler.php:158
+msgid "An error occurred. Please try again."
+msgstr ""
+
+#: includes/class-subscription-handler.php:107
+msgid "Email Address:"
+msgstr ""
+
+#: includes/class-subscription-handler.php:109
+msgid "Subscribe"
+msgstr ""
