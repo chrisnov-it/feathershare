@@ -249,18 +249,97 @@ class FeatherShare_Admin {
 
 		// Register the settings
 		register_setting( $this->plugin_name, 'feathershare_social_networks', array( $this, 'sanitize_social_networks' ) );
-		register_setting( $this->plugin_name, 'feathershare_enable_messenger', array( 'type' => 'boolean', 'sanitize_callback' => 'rest_sanitize_boolean' ) );
-		register_setting( $this->plugin_name, 'feathershare_facebook_app_id', array( 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ) );
-		register_setting( $this->plugin_name, 'feathershare_button_style', array( 'type' => 'string', 'sanitize_callback' => 'sanitize_key', 'default' => 'circle' ) );
-		register_setting( $this->plugin_name, 'feathershare_button_size', array( 'type' => 'string', 'sanitize_callback' => 'sanitize_key', 'default' => 'medium' ) );
-		register_setting( $this->plugin_name, 'feathershare_show_labels', array( 'type' => 'boolean', 'sanitize_callback' => 'rest_sanitize_boolean', 'default' => false ) );
-		register_setting( $this->plugin_name, 'feathershare_enable_copy_link', array( 'type' => 'boolean', 'sanitize_callback' => 'rest_sanitize_boolean', 'default' => true ) );
-		register_setting( $this->plugin_name, 'feathershare_subscription_title', array( 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ) );
-		register_setting( $this->plugin_name, 'feathershare_subscription_description', array( 'type' => 'string', 'sanitize_callback' => 'wp_kses_post' ) );
-		register_setting( $this->plugin_name, 'feathershare_subscription_button_text', array( 'type' => 'string', 'sanitize_callback' => 'sanitize_text_field' ) );
-		register_setting( $this->plugin_name, 'feathershare_subscription_placement', array( 'type' => 'string', 'sanitize_callback' => 'sanitize_key' ) );
+		register_setting(
+			$this->plugin_name,
+			'feathershare_enable_messenger',
+			array(
+				'type'              => 'boolean',
+				'sanitize_callback' => 'rest_sanitize_boolean',
+			)
+		);
+		register_setting(
+			$this->plugin_name,
+			'feathershare_facebook_app_id',
+			array(
+				'type'              => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+		register_setting(
+			$this->plugin_name,
+			'feathershare_button_style',
+			array(
+				'type'              => 'string',
+				'sanitize_callback' => 'sanitize_key',
+				'default'           => 'circle',
+			)
+		);
+		register_setting(
+			$this->plugin_name,
+			'feathershare_button_size',
+			array(
+				'type'              => 'string',
+				'sanitize_callback' => 'sanitize_key',
+				'default'           => 'medium',
+			)
+		);
+		register_setting(
+			$this->plugin_name,
+			'feathershare_show_labels',
+			array(
+				'type'              => 'boolean',
+				'sanitize_callback' => 'rest_sanitize_boolean',
+				'default'           => false,
+			)
+		);
+		register_setting(
+			$this->plugin_name,
+			'feathershare_enable_copy_link',
+			array(
+				'type'              => 'boolean',
+				'sanitize_callback' => 'rest_sanitize_boolean',
+				'default'           => true,
+			)
+		);
+		register_setting(
+			$this->plugin_name,
+			'feathershare_subscription_title',
+			array(
+				'type'              => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+		register_setting(
+			$this->plugin_name,
+			'feathershare_subscription_description',
+			array(
+				'type'              => 'string',
+				'sanitize_callback' => 'wp_kses_post',
+			)
+		);
+		register_setting(
+			$this->plugin_name,
+			'feathershare_subscription_button_text',
+			array(
+				'type'              => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+			)
+		);
+		register_setting(
+			$this->plugin_name,
+			'feathershare_subscription_placement',
+			array(
+				'type'              => 'string',
+				'sanitize_callback' => 'sanitize_key',
+			)
+		);
 	}
 
+	/**
+	 * Render the general section text.
+	 *
+	 * @since    1.0.0
+	 */
 	public function render_general_section_text() {
 		$export_url = add_query_arg(
 			array(
@@ -274,17 +353,32 @@ class FeatherShare_Admin {
 		echo '<a href="' . esc_url( $export_url ) . '" class="button button-primary">' . esc_html__( 'Export Subscribers to CSV', 'feathershare' ) . '</a>';
 	}
 
+	/**
+	 * Render the networks section text.
+	 *
+	 * @since    1.0.0
+	 */
 	public function render_networks_section_text() {
 		echo '<p>' . esc_html__( 'Select the social networks you want to enable.', 'feathershare' ) . '</p>';
 	}
 
+	/**
+	 * Render the appearance section text.
+	 *
+	 * @since    1.0.0
+	 */
 	public function render_appearance_section_text() {
 		echo '<p>' . esc_html__( 'Customize the appearance of your share buttons.', 'feathershare' ) . '</p>';
 	}
 
+	/**
+	 * Render the button style field.
+	 *
+	 * @since    1.0.0
+	 */
 	public function render_button_style_field() {
 		$current_style = get_option( 'feathershare_button_style', 'circle' );
-		$styles = array(
+		$styles        = array(
 			'circle'  => __( 'Circle (Default)', 'feathershare' ),
 			'square'  => __( 'Square', 'feathershare' ),
 			'rounded' => __( 'Rounded Square', 'feathershare' ),
@@ -298,9 +392,14 @@ class FeatherShare_Admin {
 		}
 	}
 
+	/**
+	 * Render the button size field.
+	 *
+	 * @since    1.0.0
+	 */
 	public function render_button_size_field() {
 		$current_size = get_option( 'feathershare_button_size', 'medium' );
-		$sizes = array(
+		$sizes        = array(
 			'small'  => __( 'Small (32px)', 'feathershare' ),
 			'medium' => __( 'Medium (40px)', 'feathershare' ),
 			'large'  => __( 'Large (48px)', 'feathershare' ),
@@ -314,40 +413,75 @@ class FeatherShare_Admin {
 		}
 	}
 
+	/**
+	 * Render the show labels field.
+	 *
+	 * @since    1.0.0
+	 */
 	public function render_show_labels_field() {
-		$show_labels = get_option( 'feathershare_show_labels', 0 );
+		$show_labels = (int) get_option( 'feathershare_show_labels', 0 );
 		echo '<input type="checkbox" name="feathershare_show_labels" id="feathershare_show_labels" value="1" ' . checked( 1, $show_labels, false ) . ' />';
 		echo '<label for="feathershare_show_labels"> ' . esc_html__( 'Show text labels next to icons (e.g., "Facebook", "Twitter")', 'feathershare' ) . '</label>';
 	}
 
+	/**
+	 * Render the enable copy link field.
+	 *
+	 * @since    1.0.0
+	 */
 	public function render_enable_copy_link_field() {
-		$enable_copy_link = get_option( 'feathershare_enable_copy_link', 1 );
+		$enable_copy_link = (int) get_option( 'feathershare_enable_copy_link', 1 );
 		echo '<input type="checkbox" name="feathershare_enable_copy_link" id="feathershare_enable_copy_link" value="1" ' . checked( 1, $enable_copy_link, false ) . ' />';
 		echo '<label for="feathershare_enable_copy_link"> ' . esc_html__( 'Add a "Copy Link" button that copies the post URL to clipboard', 'feathershare' ) . '</label>';
 	}
 
+	/**
+	 * Render the subscription section text.
+	 *
+	 * @since    1.0.0
+	 */
 	public function render_subscription_section_text() {
 		echo '<p>' . esc_html__( 'Customize the appearance and placement of the subscription form.', 'feathershare' ) . '</p>';
 	}
 
+	/**
+	 * Render the subscription title field.
+	 *
+	 * @since    1.0.0
+	 */
 	public function render_subscription_title_field() {
 		$value = get_option( 'feathershare_subscription_title', __( 'Subscribe to our Newsletter', 'feathershare' ) );
-		echo '<input type="text" name="feathershare_subscription_title" value="' . esc_attr($value) . '" class="regular-text" />';
+		echo '<input type="text" name="feathershare_subscription_title" value="' . esc_attr( $value ) . '" class="regular-text" />';
 	}
 
+	/**
+	 * Render the subscription description field.
+	 *
+	 * @since    1.0.0
+	 */
 	public function render_subscription_description_field() {
 		$value = get_option( 'feathershare_subscription_description', __( 'Get the latest posts delivered right to your inbox.', 'feathershare' ) );
-		echo '<textarea name="feathershare_subscription_description" rows="4" class="large-text">' . esc_textarea($value) . '</textarea>';
+		echo '<textarea name="feathershare_subscription_description" rows="4" class="large-text">' . esc_textarea( $value ) . '</textarea>';
 	}
 
+	/**
+	 * Render the subscription button text field.
+	 *
+	 * @since    1.0.0
+	 */
 	public function render_subscription_button_text_field() {
 		$value = get_option( 'feathershare_subscription_button_text', __( 'Subscribe', 'feathershare' ) );
-		echo '<input type="text" name="feathershare_subscription_button_text" value="' . esc_attr($value) . '" class="regular-text" />';
+		echo '<input type="text" name="feathershare_subscription_button_text" value="' . esc_attr( $value ) . '" class="regular-text" />';
 	}
 
+	/**
+	 * Render the subscription placement field.
+	 *
+	 * @since    1.0.0
+	 */
 	public function render_subscription_placement_field() {
 		$current_placement = get_option( 'feathershare_subscription_placement', 'manual' );
-		$placements = array(
+		$placements        = array(
 			'manual'        => __( 'Manual (using shortcode [feathershare_subscribe])', 'feathershare' ),
 			'after_content' => __( 'Automatically after every post', 'feathershare' ),
 		);
@@ -360,6 +494,11 @@ class FeatherShare_Admin {
 		}
 	}
 
+	/**
+	 * Render the social networks field.
+	 *
+	 * @since    1.0.0
+	 */
 	public function render_social_networks_field() {
 		$options = get_option( 'feathershare_social_networks', array( 'facebook' => 1, 'twitter' => 1, 'linkedin' => 1 ) );
 

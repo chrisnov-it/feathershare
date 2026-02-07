@@ -115,13 +115,13 @@ class Subscription_Handler {
 	 * @return   string   The subscription form HTML.
 	 */
 	public function display_subscription_form( $atts ) {
-		// Get custom text from options, with defaults
+		// Get custom text from options, with defaults.
 		$title       = get_option( 'feathershare_subscription_title', __( 'Subscribe to our Newsletter', 'feathershare' ) );
 		$description = get_option( 'feathershare_subscription_description', __( 'Get the latest posts delivered right to your inbox.', 'feathershare' ) );
 		$button_text = get_option( 'feathershare_subscription_button_text', __( 'Subscribe', 'feathershare' ) );
 
-		// Build the form HTML
-		$form = '<div class="feathershare-subscription-form">';
+		// Build the form HTML.
+		$form  = '<div class="feathershare-subscription-form">';
 		$form .= '<h3>' . esc_html( $title ) . '</h3>';
 		$form .= '<p>' . wp_kses_post( $description ) . '</p>';
 		$form .= '<div class="feathershare-subscription-message"></div>';
@@ -146,7 +146,7 @@ class Subscription_Handler {
 	public function maybe_display_form_after_content( $content ) {
 		$placement = get_option( 'feathershare_subscription_placement', 'manual' );
 
-		if ( $placement === 'after_content' && is_single() && in_the_loop() && is_main_query() ) {
+		if ( 'after_content' === $placement && is_single() && in_the_loop() && is_main_query() ) {
 			$content .= $this->display_subscription_form( array() );
 		}
 
@@ -215,7 +215,7 @@ class Subscription_Handler {
 		$post_id = wp_insert_post( $post_data, true );
 
 		if ( is_wp_error( $post_id ) ) {
-			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			if ( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) {
 				error_log( 'FeatherShare Subscription Error: ' . $post_id->get_error_message() );
 			}
 			wp_send_json_error( array( 'message' => __( 'An error occurred. Please try again.', 'feathershare' ) ), 500 );
