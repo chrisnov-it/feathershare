@@ -234,7 +234,7 @@ class Social_Sharing {
 	public function enqueue_styles() {
 		// Only enqueue on single post pages
 		if ( is_single() ) {
-			wp_enqueue_style( $this->plugin_name . '-social-sharing', FEATHERSHARE_URL . 'public/css/social-sharing.css', array(), $this->version, 'all' );
+			wp_enqueue_style( $this->plugin_name, FEATHERSHARE_URL . 'public/css/feathershare.css', array(), $this->version, 'all' );
 		}
 	}
 
@@ -246,7 +246,7 @@ class Social_Sharing {
 	public function enqueue_scripts() {
 		// Only enqueue on single post pages
 		if ( is_single() ) {
-			wp_enqueue_script( $this->plugin_name . '-social-sharing', FEATHERSHARE_URL . 'public/js/social-sharing.js', array( 'jquery' ), $this->version, true );
+			wp_enqueue_script( $this->plugin_name, FEATHERSHARE_URL . 'public/js/feathershare.js', array( 'jquery' ), $this->version, true );
 		}
 	}
 }

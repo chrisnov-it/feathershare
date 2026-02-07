@@ -63,7 +63,7 @@ class FeatherShare_Public {
 	 * @since    1.0.0
 	 */
 	public function enqueue_styles() {
-		wp_enqueue_style( $this->plugin_name, FEATHERSHARE_URL . 'public/css/feathershare-public.css', array(), $this->version, 'all' );
+		// Only enqueue if necessary, handled by sub-classes for better performance
 	}
 
 	/**
@@ -72,6 +72,6 @@ class FeatherShare_Public {
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
-		wp_enqueue_script( $this->plugin_name, FEATHERSHARE_URL . 'public/js/feathershare-public.js', array( 'jquery' ), $this->version, true );
+		// Only enqueue if necessary, handled by sub-classes for better performance
 	}
 }

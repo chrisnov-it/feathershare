@@ -3,7 +3,7 @@
  * Plugin Name:       FeatherShare
  * Plugin URI:        https://chrisnov.com/plugins/feathershare/
  * Description:       A clean, modular, and object-oriented plugin following WordPress coding standards.
- * Version:           1.2
+ * Version:           1.3
  * Requires at least: 5.0
  * Requires PHP:      7.4
  * Author:            Reynov Christian
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Current plugin version.
  */
-define( 'FEATHERSHARE_VERSION', '1.2' );
+define( 'FEATHERSHARE_VERSION', '1.3' );
 
 /**
  * Define constants for the plugin's main file, directory path, and URL.

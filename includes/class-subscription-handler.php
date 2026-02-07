@@ -248,17 +248,12 @@ class Subscription_Handler {
 		}
 		
 		if ( $should_enqueue ) {
-			wp_enqueue_script( 
-				$this->plugin_name . '-subscription', 
-				FEATHERSHARE_URL . 'public/js/subscription-handler.js', 
-				array( 'jquery' ), 
-				$this->version, 
-				true 
-			);
+			wp_enqueue_style( $this->plugin_name, FEATHERSHARE_URL . 'public/css/feathershare.css', array(), $this->version, 'all' );
+			wp_enqueue_script( $this->plugin_name, FEATHERSHARE_URL . 'public/js/feathershare.js', array( 'jquery' ), $this->version, true );
 
 			// Localize the script with AJAX settings + i18n strings.
 			wp_localize_script(
-				$this->plugin_name . '-subscription',
+				$this->plugin_name,
 				'feathershareSubscribe',
 				array(
 					'ajaxUrl' => admin_url( 'admin-ajax.php' ),
